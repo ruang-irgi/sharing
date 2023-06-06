@@ -1,0 +1,172 @@
+Program tugas_modul8;
+uses crt;
+
+type
+ toko_a=record
+  n_brg :string;
+  tgl   :string;
+  jmlh  :integer;
+  h_sat : longint;
+  hitung: longint;
+ end;
+
+var
+  TOKO   :text;
+  tokoku : array[1..30] of toko_a;
+  n,i    : integer;
+  ch     : char;
+  tot_byr: longint;
+
+Function hitung(h_sat,jmlh :longint):longint;
+  begin
+   hitung := h_sat*jmlh;
+  end;
+
+Procedure input;
+  begin
+   write('Banyak produk terjual minggu ini : '); readln(n);
+   for i:=1 to n do
+    begin
+     with tokoku[i] do
+      begin
+       writeln('Produk ke -',i);
+       write('Tanggal      : '); readln(tgl);
+       write('Nama Barang  : '); readln(n_brg);
+       write('Harga satuan : '); readln(h_sat);
+       write('jumlah barang: '); readln(jmlh);
+       writeln;
+      end;
+    tokoku[i].hitung:=hitung(tokoku[i].h_sat,tokoku[i].jmlh);
+    end;
+  end;
+
+procedure tulis;
+  begin
+   assign(TOKO,'TOKO.txt');
+   {$I-}
+   reset(TOKO);
+   {$I+}
+   if IOResult=0 then
+    begin
+     write('File TOKO.txt sudah ada di drive,hapus dan buat file baru?[y/t]');
+     repeat ch:=readkey; until upcase(ch) in ['Y','T'];
+     if upcase(ch) = 'T' then halt;
+    end;
+   rewrite(TOKO);
+   for i:=1 to n do
+    begin
+     writeln(TOKO,tokoku[i].tgl);
+     writeln(TOKO,tokoku[i].n_brg);
+     writeln(TOKO,tokoku[i].h_sat);
+     writeln(TOKO,tokoku[i].jmlh);
+    end;
+   close(TOKO);
+  end;
+
+procedure tambah;
+ begin
+  assign(TOKO,'TOKO.txt');
+  append(TOKO);
+  for i:=1 to n do
+   begin
+    writeln(TOKO,tokoku[i].tgl);
+    writeln(TOKO,tokoku[i].n_brg);
+    writeln(TOKO,tokoku[i].h_sat);
+    writeln(TOKO,tokoku[i].jmlh);
+   end;
+  close(TOKO);
+ end;
+
+procedure baca;
+ begin
+  assign(TOKO,'TOKO.txt');
+  reset(TOKO);
+  i:=1;
+  while not eof(TOKO) do
+   begin
+    with tokoku[i] do
+     begin
+      readln(TOKO,tgl); readln(TOKO,n_brg);
+      readln(TOKO,h_sat); readln(TOKO,jmlh);
+     end;
+      tokoku[i].hitung:=hitung(tokoku[i].h_sat,tokoku[i].jmlh);
+      inc(i);
+   end;
+    n:=i-1;
+    close(TOKO);
+ end;
+
+procedure output;
+ begin
+  clrscr;
+  gotoxy(15,1); writeln('=======Penjualan Toko Atikamaul_=======');
+  writeln;
+  writeln('-----------------------------------------------------------------------');
+  gotoxy(1,4); writeln('No');
+  gotoxy(6,4); writeln('Tanggal');
+  gotoxy(16,4); writeln('Nama Barang');
+  gotoxy(33,4); writeln('Harga Satuan');
+  gotoxy(48,4); writeln('Jumlah');
+  gotoxy(60,4); writeln('Harga Total');
+  writeln('-----------------------------------------------------------------------');
+
+  for i:=1 to n do
+   begin
+    with tokoku[i] do
+     begin
+      gotoxy(1,5+i); writeln(i);
+      gotoxy(4,5+i); writeln(tgl);
+      gotoxy(16,5+i); writeln(n_brg);
+      gotoxy(33,5+i); writeln(h_sat);
+      gotoxy(48,5+i); writeln(jmlh);
+      gotoxy(60,5+i); writeln(hitung);
+     end;
+   end;
+ end;
+
+procedure hitung;
+ begin
+  tot_byr:=0;
+  for i:=1 to n do
+   begin
+    with tokoku[i] do
+    tot_byr:=tot_byr + tokoku[i].hitung;
+   end;
+  writeln('-----------------------------------------------------------------------');
+  writeln('Total Pendapatan   : ',tot_byr);
+ end;
+
+procedure menu;
+ begin
+  writeln('1. Buat data baru');
+  writeln('2. Tambahkan data');
+  writeln('3. Lihat data yang ada');
+  writeln('4. Keluar');
+  write('pilihan');
+   repeat ch:=readkey until ch in['1','2','3','4'];
+    clrscr;
+ case ch of
+  '1' : begin
+         input;
+         tulis;
+         output;
+         hitung;
+        end;
+  '2' : begin
+         input;
+         tambah;
+        end;
+  '3' : begin
+         baca;
+         output;
+         hitung;
+        end;
+  '4' : halt;
+  end;
+  end;
+
+begin
+ clrscr;
+ menu;
+ readln;
+end.
