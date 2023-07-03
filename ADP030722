@@ -16,8 +16,8 @@ n,i,j,k,p,q,r,s,x,z: integer;
 t : char;
 maxp: longint;
 namakb : pa;
-garis,user, pw: string;
-f : text;
+garis,user,pw: string;
+f: text;
 
 procedure input_1(var n:integer);
 begin
@@ -155,6 +155,7 @@ begin
   writeln;
   assign(f,'fileee.txt');
   reset(f);
+  i:=1;
   while not eof (f) do
   begin
     readln(f,namakb.e);
@@ -178,9 +179,11 @@ begin
         write(ka[i,j].a);
       end;
       writeln;
-    end
+    end;
+    inc(i);
   end;
   readln;
+  close(f);
 end;
 
 procedure loading;
@@ -246,6 +249,7 @@ begin
     begin
       gotoxy(50,10);
       writeln('Selesai');
+      readln;
     end;
   end;
  end;
