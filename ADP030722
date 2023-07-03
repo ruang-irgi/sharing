@@ -1,0 +1,258 @@
+program suara_pemilu;
+uses crt;
+label ulang;
+type pa=record
+ a:integer;
+ b:integer;
+ c:integer;
+ d:string[30];
+ e:string[30];
+ end;
+
+var
+ka: array [1..100,1..100] of pa;
+ki: array [1..100] of pa;
+n,i,j,k,p,q,r,s,x,z: integer;
+t : char;
+maxp: longint;
+namakb : pa;
+garis,user, pw: string;
+f : text;
+
+procedure input_1(var n:integer);
+begin
+  write('Input nama kabupaten : '); readln(namakb.e);
+  write('Input jumlah kecamatan : '); readln(n);
+  gotoxy(33,3);
+  writeln('Total Suara Masing-masing Daerah');
+end;
+
+procedure komentar(var n:integer);
+begin
+  for k := 2 to 73 do
+  begin
+    gotoxy(k,5); write('=');
+  end;
+  for j := 1 to 3 do
+  begin
+    gotoxy(2,6); write('| No | Daerah \ Paslon |');
+    gotoxy(11*j+17,6); write('Paslon ',j,' | ');
+  end;
+  for k := 2 to 73 do
+  begin
+    gotoxy(k,7); write('-');
+  end;
+  for i := 1 to n do
+  begin
+    gotoxy(2,7+i); write('| ',i);
+    gotoxy(7,7+i); write('|');
+    gotoxy(25,7+i); write('|');
+    gotoxy(37,7+i); write('|');
+    gotoxy(48,7+i); write('|');
+    gotoxy(59,7+i); write('|');
+    gotoxy(73,7+i); write('|');
+  end;
+  gotoxy(60,6); write('    Total    |');
+  for k := 2 to 73 do
+  begin
+    gotoxy(k,n+8); write('-');
+  end;
+  gotoxy(1,n+9); writeln(' | Total                |           |          |          |             |');
+  for k := 2 to 73 do
+  begin
+    gotoxy(k,n+10); write('=');
+  end;
+  for i:= 1 to n do
+  begin
+    gotoxy(9,7+i); readln(ki[i].d);
+  end;
+
+end;
+
+procedure input_2(var n:integer);
+begin
+  for i := 1 to n do
+  for j := 1 to 3 do
+  begin
+    gotoxy(11*j+17,7+i); readln(ka[i,j].a);
+  end;
+end;
+
+function total_daerah: integer;
+begin
+for i := 1 to n do
+  begin
+    ki[i].b:= 0;
+    for j := 1 to 3 do
+      begin
+        ki[i].b := ki[i].b + ka[i,j].a;
+      end;
+    gotoxy(62,i+7); writeln(ki[i].b);
+  end;
+end;
+
+function total_suara : integer;
+begin
+  for i := 1 to 3 do
+  begin
+    ki[i].c := 0;
+    for j := 1 to n do
+    begin
+      ki[i].c := ki[i].c + ka[j,i].a;
+    end;
+    gotoxy(11*i+17,n+9); writeln(ki[i].c);
+  end;
+  q:=0;
+  for i:=1 to 3 do
+  begin
+    q:=q+ki[i].c
+  end;
+  gotoxy(62,n+9); write(q);
+end;
+
+procedure suara_terbanyak;
+begin
+  maxp := ki[1].c;
+  for i := 1 to 5 do
+  if (ki[i].c > maxp) then
+  begin
+    maxp := ki[i].c;
+    s := i;
+  end;
+  if s = 0 then
+  s := s + 1;
+end;
+
+Procedure hasil;
+begin
+  writeln;
+  writeln;
+  writeln;
+  writeln('Paslon dengan suara terbanyak adalah paslon ',s,' yaitu sebanyak ',maxp,' suara');
+  readln;
+end;
+
+procedure simpanfile;
+begin
+  assign(f,'fileee.txt');
+  append(f);
+  writeln(f,namakb.e);
+  for i:=1 to n do
+  begin
+    write(f,ki[i].d,' ');
+    for j :=1 to 3 do
+    begin
+      write(f,ka[i,j].a,' ');
+    end;
+    writeln();
+  end;
+  writeln;
+  close(f);
+end;
+
+procedure lihatfile;
+begin
+  writeln;
+  assign(f,'fileee.txt');
+  reset(f);
+  while not eof (f) do
+  begin
+    readln(f,namakb.e);
+    writeln(namakb.e);
+    read(f,ki[i].d);
+    write(ki[i].d);
+   for i:= 1 to n do
+    begin
+      read(f,ki[i].d);
+      for j:= 1 to 3 do
+      begin
+        read(f,ka[i,j].a);
+      end;
+      readln();
+   end;
+   for i:= 1 to n do
+    begin
+      write(ki[i].d);
+      for j:= 1 to 3 do
+      begin
+        write(ka[i,j].a);
+      end;
+      writeln;
+    end
+  end;
+  readln;
+end;
+
+procedure loading;
+begin
+  gotoxy(66,20); writeln('Loading..');
+  gotoxy(59,23); writeln('----------------------');
+  gotoxy(59,24); writeln('|');
+  gotoxy(80,24); writeln('|');
+  gotoxy(59,25); writeln('----------------------');
+  for x:=1 to 100 do
+  begin
+    delay(30);
+    gotoxy(68,22); writeln(x,' %');
+    if(x mod 5=0) then
+    begin
+      z:=z+1;
+      gotoxy(59+z,24); writeln('=');
+    end;
+  end;
+  clrscr;
+end;
+
+begin
+  clrscr;
+  gotoxy(60,20);write('Username : '); readln (user);
+  gotoxy(60,21); write('Password : '); readln(pw);
+  if ((user='pemilu2024') and (pw='12345')) then
+  begin
+    clrscr;
+    loading;
+    ulang:
+    clrscr;
+    repeat
+    gotoxy(30,2); Writeln('WELCOME BACK!');
+    writeln;
+    writeln('1. Input data');
+    writeln('2. Lihat data');
+    writeln('3. Exit');
+    writeln;
+    write('Input pilihan : ');
+    readln(t);
+    until t in ['1','2','3'];
+    clrscr;
+    case t of
+    '1':
+    begin
+      input_1(n);
+      komentar(n);
+      input_2(n);
+      total_daerah;
+      total_suara;
+      suara_terbanyak;
+      hasil;
+      simpanfile;
+      goto ulang;
+    end;
+    '2':
+    begin
+      lihatfile;
+      goto ulang;
+    end;
+    '3':
+    begin
+      gotoxy(50,10);
+      writeln('Selesai');
+    end;
+  end;
+ end;
+  if ((user<>'pemilu2024')and(pw<>'12345')) then
+  begin
+    clrscr;
+    loading;
+    writeln('Username dan Password salah!!');
+  end;
+end.
