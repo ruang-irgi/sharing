@@ -1,0 +1,47 @@
+function pdp_solver
+    % Parameter
+    a = 1.0;
+    b = 2.0;
+    c = 1.0;
+    L = 10.0;  % Panjang domain spasial
+    T = 2.0;   % Waktu akhir simulasi
+
+    % Diskritisasi variabel
+    N = 100;  % Jumlah langkah diskritisasi untuk x
+    M = 1000; % Jumlah langkah diskritisasi untuk t
+
+    x = linspace(-L, L, N+1);
+    t = linspace(0, T, M+1);
+
+    % Membuat fungsi kondisi awal
+    function u0 = initial_condition(x)
+        u0 = c * (x < 0) + b * (x >= 0);
+    end
+
+    % Membuat fungsi persamaan diferensial
+    function [c, f, s] = pdp_equation(x, t, u, du_dx)
+        c = 1;
+        f = a * (1 - 2*u/b) * du_dx;
+        s = 0;
+    end
+
+    % Menyelesaikan PDP menggunakan pdepe
+    sol = pdepe(0, @pdp_equation, @initial_condition, @symmetric_bc, x, t);
+
+    % Menampilkan solusi dalam bentuk grafik
+    u = sol(:,:,1);
+    figure;
+    surf(x, t, u);
+    xlabel('x');
+    ylabel('t');
+    zlabel('u(x,t)');
+    title('Numerical Solution of PDE');
+end
+
+function [pl, ql, pr, qr] = symmetric_bc(xl, ul, xr, ur, t)
+    % Kondisi batas simetris di u(-L, t) = u(L, t)
+    pl = ul - ur;
+    ql = 0;
+    pr = pl;
+    qr = 0;
+end
