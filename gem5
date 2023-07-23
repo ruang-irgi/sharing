@@ -5,10 +5,12 @@ using namespace std;
 int main()
 {
  int n,i,j,terkecil;
- cin >> n ;
+ do {cin >> n ;}
+ while (n < 1 || n > 100);
  int baris[n],baris_baru[n];
  for ( i = 0 ; i < n ; i++) {
- cin >> baris[i];
+ do {cin >> baris[i];}
+ while (baris[i] < 1 || baris[i] > 1000);
  }
  for ( i = 0; i < n ; i++) {
     terkecil = baris[i];
@@ -42,14 +44,16 @@ int main()
         continue;
     }
     if ( baris_baru[i]- baris_baru[i-1] == 1){
-        continue;
+            if (i == j-1) {
+                cout << "-" << baris_baru[i];
+            }
+            else {
+             continue;
+            }
     }
     else {
         if ( baris_baru[i-1] - baris_baru[i-2] == 1 ) {
             cout << "-" << baris_baru[i-1] << "," << baris_baru[i];
-        }
-        else if ( i == j-1) {
-            cout << "-" << baris_baru[i];
         }
         else {
             cout << "," << baris_baru[i];
