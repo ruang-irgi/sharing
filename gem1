@@ -1,0 +1,44 @@
+#include <iostream>
+using namespace std;
+int main(){
+    int N, m(0), m1(0), total(0);
+    do {cin >> N;}
+    while (N < 1 || N > 1000);
+    int V[N], indeks[N];
+    for (int i(0); i < N; i++){
+        do{cin >> V[i];}
+        while (V[i] < 1 || V[i] > 10000);
+    }
+    for (int i(0); i < N - 1; i++){
+        total += V[i];
+        for (int j(i); j < N; j++){
+            if (V[i] != V[j]){
+                m += 1;
+            }
+        }
+    }
+    total += V[N-1];
+    float mean;
+    mean = (float) total / (float) N;
+    if (m == 0){cout << "SESUAI";}
+    else if (m != 0){
+        for (int i(0); i < N; i++){
+            if (mean != V[i]){
+                indeks[m1] = i;
+                m1 += 1;
+            }
+        }
+        if (m1 == 2){
+            if (V[indeks[0]] > V[indeks[1]]){
+                int X((V[indeks[0]] - mean)), Y(indeks[0] + 1), Z(indeks[1] + 1);
+                cout << X << " " << Y << " " << Z;
+            }
+            else {
+                int X((V[indeks[1]] - mean)), Y(indeks[1] + 1), Z(indeks[0] + 1);
+                cout << X << " " << Y << " " << Z;
+            }
+        }
+        else {cout << "TIDAK SESUAI";}
+    }
+    return 0;
+}
